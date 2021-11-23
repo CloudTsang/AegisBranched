@@ -1,0 +1,11 @@
+{
+	"skins": {
+		"eui.ProgressBar": "resource/eui_skins/ProgressBarSkin.exml"
+	},
+	"autoGenerateExmlsList": true,
+	"exmls": [
+		"resource/eui_skins/ProgressBarSkin.exml",
+		"resource/eui_skins/confirmbtn.exml"
+	],
+	"path": "resource/default.thm.json"
+}

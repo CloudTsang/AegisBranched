@@ -1,0 +1,50 @@
+{
+	"groups": [
+		{
+			"keys": "description_json,stage1_json,stage1_png,confirmbtn_png,confirmbtn_down_png,thumb_pb_png,track_pb_png,thumb_pb_enemy_png",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "stage1_json",
+			"type": "json",
+			"url": "assets/stage1.json"
+		},
+		{
+			"name": "stage1_png",
+			"type": "image",
+			"url": "assets/stage1.png"
+		},
+		{
+			"name": "confirmbtn_png",
+			"type": "image",
+			"url": "assets/confirmbtn.png"
+		},
+		{
+			"name": "confirmbtn_down_png",
+			"type": "image",
+			"url": "assets/confirmbtn_down.png"
+		},
+		{
+			"name": "thumb_pb_png",
+			"type": "image",
+			"url": "assets/ProgressBar/thumb_pb.png"
+		},
+		{
+			"name": "track_pb_png",
+			"type": "image",
+			"url": "assets/ProgressBar/track_pb.png"
+		},
+		{
+			"name": "thumb_pb_enemy_png",
+			"type": "image",
+			"url": "assets/ProgressBar/thumb_pb_enemy.png"
+		}
+	]
+}
