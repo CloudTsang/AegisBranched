@@ -10,6 +10,7 @@ class KiheiGen2 extends Kihei{
 		this.maxHP = 350;		
 		this.attackRange = 	-1;
 		this.damageRange = 4;
+		this.atk = 55
 		this.maxCD = egret.MainContext.instance.stage.frameRate * 3;
 		this.rangeType = RangeType.FAN;
 	}
@@ -23,6 +24,6 @@ class KiheiGen2 extends Kihei{
 		return sp
 	}
 
-	public action(){
+	public action(){		
 	}
 }

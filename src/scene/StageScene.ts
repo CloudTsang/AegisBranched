@@ -2,6 +2,9 @@ class StageScene extends egret.Sprite{
 	private _kiheis:Kihei[];
 	private _kiheiStatus:Status[];
 	private _curSelectedKihei:Kihei;
+
+	private _kaijus:Kaiju[];
+
 	private _stage:egret.Stage = egret.MainContext.instance.stage;	
 	private _cellSize:number;
 	private _cellArr:MapCell[][];
@@ -10,20 +13,26 @@ class StageScene extends egret.Sprite{
 	private _isAction:boolean;
 	private _actConfirmButton:ConfirmBtn;
 	private _playPhase:PlayPhase;
+	private _routeDict:RouteDict;
+
+	/**最多同时存在怪兽数 */
+	private readonly MAX_KAIJU_NUM:number = 20;
 	
 		
 	public constructor() {
 		super();		
+		this._routeDict = new RouteDict();
 	}
 
 	public play(stageName:string){
-		let jsonData = RES.getRes(stageName+'_json')
+		let jsonData:IMapData = RES.getRes(stageName+'_json')
 		if(jsonData == null){
 			return;
 		}
 		console.log('关卡数据：',jsonData);				
-		this.initMap(jsonData.data, jsonData.size, jsonData.nodes);
+		this.initMap(jsonData.data, jsonData.size, jsonData.nodes, jsonData.kaiju);
 		this.initKihei(jsonData.kihei);
+		this.initKaiju();
 		this.initUI();
 
 		this._playPhase = PlayPhase.SPARE
@@ -35,9 +44,9 @@ class StageScene extends egret.Sprite{
 		// this.addEventListener('touchReleaseOutside', this.onMouseUp, this)
 	}
 
-	private initMap(mapData:number[][], mapSize:number[], nodeData:any){	
+	private initMap(mapData:number[][], mapSize:number[], nodeData:any, kaiju:number[][]){	
 		let cellSize = this._stage.stageWidth / mapSize[1]	
-		World.getIns().initMap(mapData, mapSize, nodeData, cellSize);
+		World.getIns().initMap(mapData, mapSize, nodeData, cellSize, kaiju);
 		let cellArr = World.getIns().cellArr;
 		for(let r=0; r<mapSize[0]; r++){			
 			for(let c=0;c<mapSize[1]; c++){
@@ -92,9 +101,45 @@ class StageScene extends egret.Sprite{
 			this.addChild(gen3);
 			kiheis.push(gen3);			
 		}
-		this._kiheis = kiheis;
-		
+		this._kiheis = kiheis;			
+	}
+
+	/**生成怪兽， */
+	private initKaiju(){
+		this._kaijus = []		
+		// for(let i=0; i<this.MAX_KAIJU_NUM/2; i++){
+		for(let i=0; i<1; i++){
+			this.generateKaiju();
+		}
+	}
+
+	private generateKaiju(){
+		if(this._kaijus.length >= this.MAX_KAIJU_NUM){
+			return;
+		}
+		const kaiju  = Kaiju.pool.getOne();
+		const tmpCell = World.getIns().randomEntry(kaiju.isAir());
+		const tmpCell2 = World.getIns().randomExit(kaiju.isAir());
+		kaiju.mapCell = tmpCell;
+		kaiju.x = tmpCell.x;
+		kaiju.y = tmpCell.y;
+		if(kaiju.isAir()){
+			kaiju.startMove([tmpCell2])
+		}else{
+			const r = this._routeDict.checkRoute2(tmpCell, tmpCell2, true);		
+			kaiju.startMove(r.route);
+		}			
+		kaiju.boot();		
+		kaiju.addEventListener(PlayEvent.KAIJU_EXIT, this.onKaijuExit, this);
+		this._kaijus.push(kaiju);		
+		this.addChild(kaiju)
+	}
+
+	private initUI(){
+		this._actConfirmButton = new ConfirmBtn();
+
 		let stat:Status[] = []
+		const kiheis = this._kiheis;
 		const tmpW:number = (this._stage.stageWidth-20)/4;
 		const tmpH:number = tmpW*1.2;		
 		const tmpY:number = this._stage.stageHeight-tmpH
@@ -109,10 +154,6 @@ class StageScene extends egret.Sprite{
 			this.addChild(s);
 		}
 		this._kiheiStatus = stat
-	}
-
-	private initUI(){
-		this._actConfirmButton = new ConfirmBtn();
 	}
 
 	private onClick(e:egret.TouchEvent){
@@ -132,7 +173,7 @@ class StageScene extends egret.Sprite{
 			if(kihei.isAir()){
 				kihei.startMove([mc], new egret.Point(e.stageX, e.stageY));					
 			}else{
-				let ret = this.findPath(kihei.mapCell, mc)			
+				let ret = this._routeDict.checkRoute2(kihei.mapCell, mc, false) //World.getIns().findPath(kihei.mapCell, mc)			
 				if(ret.route.length > 0){				
 					kihei.startMove(ret.route, new egret.Point(e.stageX, e.stageY));
 				}							
@@ -141,7 +182,6 @@ class StageScene extends egret.Sprite{
 			this._pause = false;
 		}		
 	}
-
 	private onMouseDown(e:egret.TouchEvent){
 		if(this._playPhase != PlayPhase.SPARE){
 			return;
@@ -152,7 +192,6 @@ class StageScene extends egret.Sprite{
 			this._pause = true;
 		}
 	}
-
 	/**上次触发拖动事件的次数 */
 	private lastCalcPoint:number = 4;
 	private onMouseMove(e:egret.TouchEvent){
@@ -175,7 +214,6 @@ class StageScene extends egret.Sprite{
 			}
 		}
 	}
-
 	private onMouseUp(e:egret.TouchEvent){	
 		this.lastCalcPoint =  1
 		if(this._playPhase == PlayPhase.ACTION){
@@ -211,6 +249,13 @@ class StageScene extends egret.Sprite{
 				//机兵选择攻击位置				
 				this._playPhase = PlayPhase.WAIT_CONFIRM
 				const tp = kihei.actionTarget
+				if(tp == null){
+					this._curSelectedKihei = null
+					this._pause = false;			
+					this._isAction = false;
+					this._playPhase = PlayPhase.SPARE
+					return;
+				}
 				const btn = this._actConfirmButton;
 				btn.x = tp.x				
 				btn.y = tp.y
@@ -233,6 +278,19 @@ class StageScene extends egret.Sprite{
 		this._isAction = false;
 	}
 
+	/**怪兽退场回调 */
+	private onKaijuExit(e:egret.Event){
+		const kaiju:Kaiju = e.target;
+		kaiju.dispose();
+		kaiju.removeEventListener(PlayEvent.KAIJU_EXIT, this.onKaijuExit, this)
+		
+		for(let i=0;i<this._kaijus.length; i++){
+			if(kaiju == this._kaijus[i]){
+				this._kaijus.splice(i,1);
+			}
+		}
+	}
+
 	private refreshStage(e:any=null){
 		if(this._pause){
 			return;
@@ -244,61 +302,10 @@ class StageScene extends egret.Sprite{
 		for(let status of this._kiheiStatus){
 			status.refreshCD();
 		}
+		for(let kaiju of this._kaijus){
+			kaiju.move();
+		}
 	}
 
-	/**地面机兵移动路径查找*/
-	private findPath(start:MapCell, target:MapCell, map:number[][]=null):{route:MapCell[], map:number[][]}{						
-		if(!map){
-			map = []	
-			for(let r of this._cellArr){
-				let tmpArr = [];
-				for(let c of r){
-					tmpArr.push(0)
-				}
-				map.push(tmpArr);
-			}
-			map[start.cellY][start.cellX] = 1;					
-		}
-		let nextNodes:MapCell[] = []		
-		for(let node of start.nodes){					
-			if(map[node[0]][node[1]] == 1){
-				//已计算过该节点
-				continue
-			}			
-			if(node[1] == target.cellX && node[0] == target.cellY){
-				//到达目的节点
-				return {route:[start].concat(...[this._cellArr[node[0]][node[1]]]), map:map};
-			}
-			map[node[0]][node[1]] = 1;
-			nextNodes.push(this._cellArr[node[0]][node[1]]);
-		}
-		if(nextNodes.length == 0){
-			//死路			
-			return {route:null, map:map}
-		}
-		let finalRet = null;	
-		let tmpMap = []
-		for(let r of map){
-			let tmp = []
-			for(let c of r){
-				tmp.push(c)
-			}
-			tmpMap.push(tmp)
-		}	
-		for(let node of nextNodes){
-			let ret = this.findPath(node, target, tmpMap)
-			if(ret.route){
-				if(!finalRet){					
-					finalRet = [start].concat(...ret.route);
-					map = ret.map;
-				}else if(ret.route.length < finalRet.length){
-					finalRet = [start].concat(...ret.route);
-					map = ret.map
-				}
-			}
-										
-		}
-		return {route:finalRet, map:map, };
-	}
 
 }

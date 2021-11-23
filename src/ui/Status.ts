@@ -59,7 +59,7 @@ class Status extends eui.Component{
 		}
 		
 		this._iscd = true;
-		const d = this._iconSize;
+		const d = this.width;
 		const r = d/2		
 		let shape = this._cdProgress;
 		let mask = this._mask;

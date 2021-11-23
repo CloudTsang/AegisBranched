@@ -14,6 +14,7 @@ class KiheiGen4 extends Kihei{
 		this.maxHP = 250;				
 		this.attackRange = 	30;		
 		this.damageRange = 5;
+		this.atk = 40;
 		this.air = true
 		this.rangeType = RangeType.CIRCLE;
 		this.maxCD = egret.MainContext.instance.stage.frameRate * 3
@@ -33,25 +34,24 @@ class KiheiGen4 extends Kihei{
 
 	/**设置移动路径 */
 	public startMove(route:MapCell[], targetPosition:egret.Point){		
-		this._route = route;
-		this._targetPosition = targetPosition;		
+		this.route = route;
+		this.targetPosition = targetPosition;		
 
 		const cell = route[route.length-1];
 		const dis = egret.Point.distance(new egret.Point(this.x, this.y), new egret.Point(cell.x, cell.y));
 		this._sin = (cell.y - this.y + 0.01)/dis
-		this._cos = (cell.x - this.x + 0.01)/dis
-		
+		this._cos = (cell.x - this.x + 0.01)/dis		
 	}
 
 	/**按照移动路径前进一单位，正在播放移动动画时直接返回 */
 	public move(){
-		if(this._targetPosition == null || this._moveTween){
+		if(this.targetPosition == null || this.moveTween){
 			return;
 		}
 		const d = this.mapCell.getSize();
 		const newx = this.x + this._cos*d;
 		const newy = this.y + this._sin*d;
-		this._moveTween = egret.Tween.get(this)
+		this.moveTween = egret.Tween.get(this)
 		.to({
 			x:newx,
 			y:newy
@@ -60,26 +60,26 @@ class KiheiGen4 extends Kihei{
 	}
 
 	protected onMoveStep(){	
-		if(this._route == null){
+		if(this.route == null){
 			return;
 		}
-		const cell = this._route[this._route.length-1];
+		const cell = this.route[this.route.length-1];
 		const x = Math.floor(this.x/cell.getSize());
 		const y = Math.floor(this.y/cell.getSize());	
 		const cellArr = World.getIns().cellArr;
 		this.mapCell = cellArr[y][x]	
 		if(this.mapCell == cell){
-			this._moveTween = egret.Tween.get(this)
+			this.moveTween = egret.Tween.get(this)
 			.to({
-				x:this._targetPosition.x,
-				y:this._targetPosition.y
+				x:this.targetPosition.x,
+				y:this.targetPosition.y
 			}, 50)
-			this._targetPosition = null;
-			this._route = null	
-			this._moveTween = null;
+			this.targetPosition = null;
+			this.route = null	
+			this.moveTween = null;
 			return;
 		}
-		this._moveTween = null;
+		this.moveTween = null;
 	}
 
 	public action(){

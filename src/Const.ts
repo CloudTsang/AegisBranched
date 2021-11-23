@@ -49,4 +49,7 @@ class PlayEvent{
 	public static readonly KIHEI_ACTION_FINISH = 'KIHEI_ACTION_FINISH';
 
 	public static readonly GET_DAMAGE = 'GET_DAMAGE'
+
+	public static readonly KAIJU_EXIT = 'KAIJU_EXIT'
+	public static readonly KAIJU_DESTROYED = 'KAIJU_DESTROYED'
 }

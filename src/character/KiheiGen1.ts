@@ -16,6 +16,7 @@ class KiheiGen1 extends Kihei{
 		this.maxHP = 500;		
 		this.attackRange = 	4;
 		this.damageRange = 2;
+		this.atk = 70
 		this.rangeType = RangeType.CIRCLE;
 		this.maxCD = egret.MainContext.instance.stage.frameRate * 2
 	}

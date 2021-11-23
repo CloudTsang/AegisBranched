@@ -11,17 +11,26 @@ class Kihei extends BaseCharacter{
 	protected attackRange:number=1;
 	/**伤害范围单位长度 */
 	protected damageRange:number=1;
+	/**伤害范围形状 */
 	protected rangeType:RangeType;
+	/**伤害范围显示对象 */
 	protected rangeSp:ActionRange;
 
-	protected _route:MapCell[]
-	protected _targetPosition:egret.Point;
-	protected _curRouteIndex:number
-	protected _moveTween:egret.Tween;
+/**移动路径 */
+	protected route:MapCell[]
+	/**移动目标位置 */
+	protected targetPosition:egret.Point;
+	/**当前区块在移动路径中的索引 */
+	protected curRouteIndex:number
+	/**移动tween */
+	protected moveTween:egret.Tween;
 
-	protected sp:egret.Sprite;
-	public actionTarget:MapCell;
+/**机兵图形 */
+	protected sp:egret.Sprite;	
 	
+	/**攻击目标，以该目标区块生成的rangeType范围内的怪兽将受到伤害 */
+	public actionTarget:MapCell;
+	protected atk:number;
 
 	
 	public constructor() {
@@ -89,18 +98,18 @@ class Kihei extends BaseCharacter{
 
 	/**设置移动路径 */
 	public startMove(route:MapCell[], targetPosition:egret.Point){		
-		this._route = route;
-		this._curRouteIndex = 1;	
-		this._targetPosition = targetPosition;	
+		this.route = route;
+		this.curRouteIndex = 1;	
+		this.targetPosition = targetPosition;	
 	}
 
 	/**按照移动路径前进一单位，正在播放移动动画时直接返回 */
 	public move(){
-		if(this._route == null || this._moveTween){
+		if(this.route == null || this.moveTween){
 			return;
 		}
-		let mc:MapCell = this._route[this._curRouteIndex]
-		this._moveTween = egret.Tween.get(this)
+		let mc:MapCell = this.route[this.curRouteIndex]
+		this.moveTween = egret.Tween.get(this)
 		.to({
 			x:mc.x,
 			y:mc.y
@@ -109,20 +118,20 @@ class Kihei extends BaseCharacter{
 	}
 
 	protected onMoveStep(){
-		this._curRouteIndex ++;
-		if(this._curRouteIndex >= this._route.length){
-			this._moveTween = egret.Tween.get(this)
+		this.curRouteIndex ++;
+		if(this.curRouteIndex >= this.route.length){
+			this.moveTween = egret.Tween.get(this)
 			.to({
-				x:this._targetPosition.x,
-				y:this._targetPosition.y
+				x:this.targetPosition.x,
+				y:this.targetPosition.y
 			}, 50)
-			this.mapCell = this._route[this._route.length-1]
-			this._moveTween = null;
-			this._route = null	
+			this.mapCell = this.route[this.route.length-1]
+			this.moveTween = null;
+			this.route = null	
 			return;
 		}
-		this.mapCell = this._route[this._curRouteIndex]
-		this._moveTween = null;
+		this.mapCell = this.route[this.curRouteIndex]
+		this.moveTween = null;
 	}	
 
 	public drawKihei():egret.Sprite{
@@ -157,5 +166,17 @@ class Kihei extends BaseCharacter{
 
 	public getRangeType():RangeType{
 		return this.rangeType;
+	}
+
+	public getAtk():number{
+		return this.atk;
+	}
+
+	public pause(){
+		this.moveTween && this.moveTween.pause();
+	}
+
+	public resume(){
+		this.moveTween && this.moveTween.play();
 	}
 }
