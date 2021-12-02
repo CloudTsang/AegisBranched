@@ -1,0 +1,76 @@
+{
+	"groups": [
+		{
+			"keys": "description_json,stage1_json,stage1_png,confirmbtn_png,confirmbtn_down_png,thumb_pb_png,track_pb_png,thumb_pb_enemy_png,character_json,slice_png,kaijuslice1_png,kaijuslice1_json,missle_png",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "stage1_json",
+			"type": "json",
+			"url": "assets/stage1.json"
+		},
+		{
+			"name": "stage1_png",
+			"type": "image",
+			"url": "assets/stage1.png"
+		},
+		{
+			"name": "confirmbtn_png",
+			"type": "image",
+			"url": "assets/confirmbtn.png"
+		},
+		{
+			"name": "confirmbtn_down_png",
+			"type": "image",
+			"url": "assets/confirmbtn_down.png"
+		},
+		{
+			"name": "thumb_pb_png",
+			"type": "image",
+			"url": "assets/ProgressBar/thumb_pb.png"
+		},
+		{
+			"name": "track_pb_png",
+			"type": "image",
+			"url": "assets/ProgressBar/track_pb.png"
+		},
+		{
+			"name": "thumb_pb_enemy_png",
+			"type": "image",
+			"url": "assets/ProgressBar/thumb_pb_enemy.png"
+		},
+		{
+			"name": "character_json",
+			"type": "sheet",
+			"url": "assets/character.json",
+			"subkeys": "mosqito,bull,ant,eagle,gen1,gen2,gen3,gen4"
+		},
+		{
+			"name": "slice_png",
+			"type": "image",
+			"url": "assets/slice.png"
+		},
+		{
+			"name": "kaijuslice1_png",
+			"type": "image",
+			"url": "assets/kaijuslice1.png"
+		},
+		{
+			"name": "kaijuslice1_json",
+			"type": "json",
+			"url": "assets/kaijuslice1.json"
+		},
+		{
+			"name": "missle_png",
+			"type": "image",
+			"url": "assets/missle.png"
+		}
+	]
+}
