@@ -18,16 +18,30 @@ class BaseCharacter extends egret.Sprite{
 
 	}	
 
-	public action(){
+	public action(objs:BaseCharacter[]){
 
 	}
 
-	public damage(){
-
+	public damage(atk:number){
+		this.HP -= atk;
+		if(this.HP <= 0){
+			//
+		}
 	}
 
 	public isAir(){
 		return this.air;
+	}
+
+	public setHP(v:number){
+		this.HP = v
+	}
+
+	public changeHP(v:number){
+		let hp = this.HP+v;
+		if(hp < 0) hp=0
+		else if(hp>this.maxHP) hp = this.maxHP
+		this.HP = hp
 	}
 
 	public getHP(){
@@ -36,5 +50,9 @@ class BaseCharacter extends egret.Sprite{
 
 	public getMaxHP(){
 		return this.maxHP;
+	}
+
+	public getHPrate(){
+		return Math.floor((this.HP/this.maxHP)*100)
 	}
 }

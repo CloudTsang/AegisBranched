@@ -4,7 +4,7 @@ class Status extends eui.Component{
 	private kihei_icon:eui.Group;
 	private hp_gauge:eui.ProgressBar;
 
-	private _sp:egret.Sprite;
+	private _sp:egret.DisplayObject;
 	private _cdProgress:egret.Shape;
 	private _iscd:boolean;
 	private _mask:egret.Shape;
@@ -13,10 +13,9 @@ class Status extends eui.Component{
 	/**机兵状态图 */
 	public constructor(kihei:Kihei) {
 		super();
-		this.addEventListener(eui.UIEvent.COMPLETE, this.init, this);
 		this._kihei = kihei;
-		this.skinName = 'resource/eui_skins/KiheiStatus.exml'
-				
+		this.addEventListener(eui.UIEvent.ADDED_TO_STAGE, this.init, this);		
+		this.skinName = 'resource/eui_skins/KiheiStatus.exml'				
 		this._kihei.addEventListener(PlayEvent.GET_DAMAGE, this.refreshHP, this);
 	}
 
@@ -31,11 +30,19 @@ class Status extends eui.Component{
 		const kihei = this._kihei;
 
 		if(!this._sp){
-
+			let sp = kihei.drawKihei();
+			const scale = sp.width/sp.height;
+			sp.width = this.width
+			sp.height = sp.width/scale;
+			sp.y = (this._iconSize-sp.height)/2
+			this._sp = sp
+			this.kihei_icon.addChild(sp)
 		}	
 
 		this.refreshHP();
 		this.refreshCD();	
+
+		// this.dispatchEvent(new egret.Event(PlayEvent.STATUS_INITED))
 	}
 
 	public refreshHP(e:any=null){

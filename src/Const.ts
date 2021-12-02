@@ -39,17 +39,42 @@ enum PlayPhase{
 	ACTION,
 }
 
+enum KiheiSkill{
+	/**跳跃攻击 */
+	JUMP_ATTACK,
+	/**电磁炮 */
+	RAIL_GUN,
+	/**导弹 */
+	MISSILE,
+	/**多联导弹 */
+	MULT_MISSILE,
+
+}
+
 class PlayEvent{
 	public static readonly START = 'START';
     public static readonly RETRY = 'RETRY';
     public static readonly CLEAR = 'CLEAR';
     public static readonly GAME_OVER = 'GAME_OVER';
 
+	/**机兵开始行动 */
 	public static readonly KIHEI_ACTION = 'KIHEI_ACTION';
+	/**机兵已行动（伤害计算阶段） */
+	public static readonly KIHEI_ACTION_DID = 'KIHEI_ACTION_DID';
+	/**机兵行动结束（怪兽爆炸阶段） */
 	public static readonly KIHEI_ACTION_FINISH = 'KIHEI_ACTION_FINISH';
 
 	public static readonly GET_DAMAGE = 'GET_DAMAGE'
 
 	public static readonly KAIJU_EXIT = 'KAIJU_EXIT'
 	public static readonly KAIJU_DESTROYED = 'KAIJU_DESTROYED'
+
+	public static readonly AEGIS_EMP = 'AEGIS_EMP';
+	public static readonly AEGIS_MAINTAIN = 'AEGIS_MAINTAIN';
+	public static readonly AEGIS_EMP_DID = 'AEGIS_EMP_DID';
+	public static readonly AEGIS_EMP_FINISH = 'AEGIS_EMP_FINISH';
+	public static readonly AEGIS_MAINTAIN_FINISH = 'AEGIS_MAINTAIN_FINISH';
+	public static readonly AEGIS_DAMAGE = 'AEGIS_DAMAGE';
+
+	public static readonly STATUS_INITED = 'STATUS_INITED';
 }

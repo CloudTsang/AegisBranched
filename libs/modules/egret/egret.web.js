@@ -2470,11 +2470,7 @@ var egret;
                     else {
                         tw = textfield.width;
                     }
-                    var inputWidth = tw * this._gscaleX;
-                    var scale = (textfield.scaleX * egret.sys.DisplayList.$canvasScaleX) / (textfield.scaleY * egret.sys.DisplayList.$canvasScaleY);
-                    this.setElementStyle("width", inputWidth / scale + "px");
-                    this.setElementStyle("transform", "scale(" + scale + ",  1)");
-                    this.setElementStyle("left", (scale - 1) * inputWidth / scale / 2 + "px");
+                    this.setElementStyle("width", tw * this._gscaleX + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
                         this.setAreaHeight();
@@ -2683,7 +2679,8 @@ var egret;
                 inputElement.style.opacity = "0";
                 var inputLock = false;
                 inputElement.oninput = function () {
-                    if (self._stageText && !inputLock) {
+                    if (self._stageText && inputLock) {
+                        inputLock = false;
                         self._stageText._onInput();
                     }
                 };
@@ -2693,9 +2690,6 @@ var egret;
                 });
                 inputElement.addEventListener('compositionend', function () {
                     inputLock = false;
-                    if (self._stageText && !inputLock) {
-                        self._stageText._onInput();
-                    }
                 });
             };
             /**
@@ -2909,8 +2903,8 @@ var egret;
                 font += "italic ";
             if (bold)
                 font += "bold ";
-            font += ((typeof fontSize == "number" && fontSize > 0) ? fontSize : 12) + "px ";
-            font += ((typeof fontFamily == "string" && fontFamily != "") ? fontFamily : "Arial");
+            font += (typeof fontSize == "number" ? fontSize : 12) + "px ";
+            font += (typeof fontFamily == "number" ? fontFamily : "Arial");
             context.font = font;
             return egret.sys.measureTextWith(context, text);
         }

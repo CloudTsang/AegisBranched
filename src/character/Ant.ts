@@ -11,10 +11,16 @@ class Ant extends Kaiju{
 
 	protected drawKaiju(){
 		const size = this.mapCell.getSize();
-		let sp = new egret.Sprite();			
-		sp.graphics.beginFill(0xFF0000)
-		sp.graphics.drawCircle(0,0, size/3)
-		sp.graphics.endFill();
-		return sp
+		let bmp = new egret.Bitmap();		
+		bmp.texture = RES.getRes('character_json#ant');
+		const scale = bmp.width/bmp.height
+		bmp.height = size;
+		bmp.width = bmp.height * scale
+		// bmp.x = bmp.width/2
+		// bmp.y = bmp.height/2
+		if(!this.sp){
+			this.addChild(bmp);				
+		}		
+		return bmp
 	}
 }

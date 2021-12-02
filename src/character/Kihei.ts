@@ -7,16 +7,7 @@ class Kihei extends BaseCharacter{
 	protected cd:number;
 	protected maxCD:number;		
 
-	/**攻击范围单位长度 */
-	protected attackRange:number=1;
-	/**伤害范围单位长度 */
-	protected damageRange:number=1;
-	/**伤害范围形状 */
-	protected rangeType:RangeType;
-	/**伤害范围显示对象 */
-	protected rangeSp:ActionRange;
-
-/**移动路径 */
+	/**移动路径 */
 	protected route:MapCell[]
 	/**移动目标位置 */
 	protected targetPosition:egret.Point;
@@ -25,17 +16,13 @@ class Kihei extends BaseCharacter{
 	/**移动tween */
 	protected moveTween:egret.Tween;
 
-/**机兵图形 */
-	protected sp:egret.Sprite;	
+	/**机兵图形 */
+	protected sp:egret.DisplayObject;	
 	
-	/**攻击目标，以该目标区块生成的rangeType范围内的怪兽将受到伤害 */
-	public actionTarget:MapCell;
-	protected atk:number;
+	protected skills:Skill[]
 
-	
 	public constructor() {
-		super();		
-		this.rangeSp = new ActionRange(this);
+		super();				
 	}
 
 	public boot(){
@@ -48,52 +35,9 @@ class Kihei extends BaseCharacter{
 		this.anchorOffsetY = sp.height/2;
 		this.addChild(sp);		
 		this.sp = sp;
-
+		this.maxCD = -1;
 		this.cd = this.maxCD
-	}
-
-	/**显示攻击范围 */
-	public showAttackRange(v:boolean){	
-		this.rangeSp.showAttackRange(v);
-	}
-
-	/**
-	 * 显示伤害范围
-	 * @param x 显示位置，传入-1时不显示
-	 * @param y 显示位置，传入-1时不显示
-	 * @param cellArr 地块数组
-	 */
-	public showDamageRange(x:number, y:number, cellArr:MapCell[][]){
-		if(x == -1 || y == -1){
-			this.rangeSp.showDamageRange(x,y)
-			return;
-		}
-		const size = this.mapCell.getSize()
-		if(this.attackRange != -1){			
-			const r = size * this.attackRange
-			const dis = egret.Point.distance(new egret.Point(x, y), new egret.Point(this.x, this.y));
-			if(dis > r){
-				//拖动超出攻击范围
-				const sin = (y-this.y+0.1) / dis;
-				const cos = (x-this.x+0.1) / dis;
-				y = this.y + (sin*r);
-				x = this.x + (cos*r);				
-				const ry = Math.floor(y/size)
-				const cx = Math.floor(x/size)
-				this.actionTarget = cellArr[ry][cx];	
-				this.rangeSp.showDamageRange(x,y) 			
-			}else{				
-				const ry = Math.floor(y/size)
-				const cx = Math.floor(x/size)
-				this.actionTarget = cellArr[ry][cx];	
-				this.rangeSp.showDamageRange(x,y)			
-			}			
-		}else{			
-			const ry = Math.floor(y/size)
-			const cx = Math.floor(x/size)
-			this.actionTarget = cellArr[ry][cx];
-			this.rangeSp.showDamageRange(x,y)			
-		}		
+		this.mountSkill();
 	}
 
 	/**设置移动路径 */
@@ -103,9 +47,21 @@ class Kihei extends BaseCharacter{
 		this.targetPosition = targetPosition;	
 	}
 
+	public stopMove(){
+		if(!this.route){
+			return
+		}
+		this.mapCell = this.route[this.curRouteIndex]
+		this.route = null;
+		this.curRouteIndex = 0;
+		this.targetPosition = null;
+		this.moveTween && this.moveTween.pause();
+		this.moveTween = null
+	}
+
 	/**按照移动路径前进一单位，正在播放移动动画时直接返回 */
 	public move(){
-		if(this.route == null || this.moveTween){
+		if(this.route == null || this.moveTween ){
 			return;
 		}
 		let mc:MapCell = this.route[this.curRouteIndex]
@@ -134,7 +90,44 @@ class Kihei extends BaseCharacter{
 		this.moveTween = null;
 	}	
 
-	public drawKihei():egret.Sprite{
+	/**显示攻击范围 */
+	public showAttackRange(v:boolean){	
+		this.skills[0].showAttackRange(v);
+	}
+	/**
+	 * 显示伤害范围
+	 * @param x 显示位置，传入-1时不显示
+	 * @param y 显示位置，传入-1时不显示
+	 * @param cellArr 地块数组
+	 */
+	public showDamageRange(x:number, y:number, cellArr:MapCell[][]){
+		this.skills[0].showDamageRange(x, y, cellArr)
+	}
+
+	public checkKaijuInRange(kaiju:Kaiju):boolean{
+		return this.skills[0].checkInRange(kaiju)
+	}
+
+	public getActionTarget():MapCell{
+		return this.skills[0].actionTarget
+	}
+
+	public action(objs:BaseCharacter[]){
+		this.skills[0].action(objs);
+	}
+
+	public getAtk(){
+		return this.skills[0].getATK();
+	}
+
+	public mountSkill(ty:KiheiSkill=null){
+		if(!this.skills || this.skills.length == 0){
+			throw new Error('Kihei has no skill');
+		}
+		return this.skills[0];
+	}
+
+	public drawKihei():egret.DisplayObject{
 		return null
 	}	
 
@@ -143,8 +136,15 @@ class Kihei extends BaseCharacter{
 		return this.cd == this.maxCD;
 	}
 
+	public startCD(v:number){
+		this.maxCD = v;
+		this.cd = 0;
+	}
+
 	public onCD():boolean{
 		if(this.cd == this.maxCD){
+			this.maxCD = -1;
+			this.cd = -1;
 			return true;
 		}
 		this.cd ++;
@@ -156,27 +156,21 @@ class Kihei extends BaseCharacter{
 		return this.cd/this.maxCD;
 	}	
 
-	public getAttackRange():number{
-		return this.attackRange;
-	}
-
-	public getDamageRange():number{
-		return this.damageRange;
-	}
-
-	public getRangeType():RangeType{
-		return this.rangeType;
-	}
-
-	public getAtk():number{
-		return this.atk;
-	}
-
 	public pause(){
 		this.moveTween && this.moveTween.pause();
 	}
 
 	public resume(){
 		this.moveTween && this.moveTween.play();
+	}	
+
+	public onSelect(v:boolean){
+		if(v){
+			let filter = new  egret.GlowFilter(0xFFD700, 0.8, 10,10,10,1,false)
+			this.sp.filters = [filter]
+		}else{
+			this.sp.filters = []
+		}
+
 	}
 }

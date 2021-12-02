@@ -56,6 +56,7 @@ class MapCell extends egret.Sprite{
 		return this._type == MapCellType.LAND || this._type == MapCellType.LAND_KIHEI || this._type == MapCellType.LAND_KAIJU
 	}
 
+/**地块单位长度 */
 	public getSize(){
 		return this._size;
 	}
@@ -98,11 +99,11 @@ class MapCell extends egret.Sprite{
 				case MapCellType.AIR:
 				case MapCellType.AIR_KAIJU:
 				case MapCellType.AIR_KIHEI:
-					this.graphics.beginFill(0x000000);
+					this.graphics.beginFill(0x000000, 0.5);
 					this.graphics.lineStyle(2, 0x32CD32);
 					break
 				default:
-					this.graphics.beginFill(0x759d4d);
+					this.graphics.beginFill(0x00FA9A);
 					break;
 			}
 		}	

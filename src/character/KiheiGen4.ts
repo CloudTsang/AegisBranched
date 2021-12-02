@@ -12,21 +12,26 @@ class KiheiGen4 extends Kihei{
 	public constructor() {
 		super();
 		this.maxHP = 250;				
-		this.attackRange = 	30;		
-		this.damageRange = 5;
-		this.atk = 40;
-		this.air = true
-		this.rangeType = RangeType.CIRCLE;
-		this.maxCD = egret.MainContext.instance.stage.frameRate * 3
+		this.air = true;		
+		this.skills = [
+			new MultMissile(this),
+		]
 	}
 
-	public drawKihei():egret.Sprite{
+	public drawKihei():egret.DisplayObject{
 		const size = this.mapCell.getSize();
-		let sp = new egret.Sprite();			
-		sp.graphics.beginFill(0x00FF00)
-		sp.graphics.drawRect(0,0,size,size)
-		sp.graphics.endFill();
-		return sp
+		let bmp = new egret.Bitmap();		
+		bmp.texture = RES.getRes('character_json#gen4');
+		const scale = bmp.width/bmp.height
+		// bmp.width = size*2;
+		bmp.height = size*1.5;
+		bmp.width = bmp.height * scale
+		bmp.x = 0
+		bmp.y = 0;
+		if(!this.sp){
+			this.addChild(bmp);				
+		}
+		return bmp
 	}
 
 
@@ -80,24 +85,5 @@ class KiheiGen4 extends Kihei{
 			return;
 		}
 		this.moveTween = null;
-	}
-
-	public action(){
-		if(!this.actionTarget){
-			return;
-		}
-
-		let tw = egret.Tween.get(this)
-		.to({			
-			x:this.actionTarget.x,
-			y:this.actionTarget.y
-		}, 1000)
-		//播放攻击动画
-		.call(()=>{
-			this.mapCell = this.actionTarget
-			this.actionTarget = null;			
-			this.cd = 0;
-			this.dispatchEvent(new egret.Event(PlayEvent.KIHEI_ACTION_FINISH));
-		}, this)
-	}
+	}	
 }

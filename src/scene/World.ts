@@ -80,6 +80,7 @@ class World {
 		}else{
 			cellArr = this.kaijuExit
 		}
+		// return cellArr[0]
 		return cellArr[Math.floor(Math.random()*cellArr.length)]
 	}
 

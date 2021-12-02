@@ -5,16 +5,18 @@ class ActionRange {
 	/**伤害范围 */
 	public damageRange:egret.Sprite;
 	/**选择攻击目标时的半透明件 */
-	public alphaKihei:egret.Sprite;
+	public alphaKihei:egret.DisplayObject;
 	private _kihei:Kihei;
+	private _skill:Skill;
 	private _isShowAttackRange:boolean
 	
-	public constructor(kihei:Kihei) {
+	public constructor(kihei:Kihei, skill:Skill) {
 		this._kihei = kihei;
+		this._skill = skill;
 	}
 
 	public showAttackRange(v:boolean){
-		if(this._kihei.getAttackRange()==-1){
+		if(this._skill.getAttackRange()==-1){
 			return;
 		}
 		if(this._isShowAttackRange == v){
@@ -36,15 +38,17 @@ class ActionRange {
 			this.damageRange.parent && this.damageRange.parent.removeChild(this.damageRange);		
 			return;	
 		}
+		
 		if(!this.damageRange){
 			this.drawRange2();
 		}		
 		const kihei = this._kihei
-		const reach = kihei.getAttackRange();	
+		const skill = this._skill
+		const reach = skill.getAttackRange();	
 		const damageRange = this.damageRange;
 		//攻击范围=-1即为第二三代机兵，不需要显示透明件,xy用于计算方向
 		//攻击范围!=-1即为第一四代机兵，显示透明件,xy用于计算位置
-		if(reach!=-1){	;
+		if(reach!=-1){	
 			let sp = this.alphaKihei;
 			if(!sp){				
 				sp = kihei.drawKihei();
@@ -63,14 +67,14 @@ class ActionRange {
 			damageRange.x = kihei.x;
 			damageRange.y = kihei.y;
 			let deg = GlobalMethod.getRotation(kihei.x, kihei.y, x, y)
-			if(kihei.getRangeType()==RangeType.FAN)  deg-=60
+			if(skill.getRangeType()==RangeType.FAN)  deg-=60
 			damageRange.rotation = deg
 			kihei.parent && kihei.parent.addChild(damageRange);			
 		}
 	}
 
 	private drawRange1(){				
-		const reach = this._kihei.getAttackRange();		
+		const reach = this._skill.getAttackRange();		
 		if(reach == -1){
 			return;
 		}		
@@ -84,9 +88,10 @@ class ActionRange {
 
 	private drawRange2(){
 		const kihei = this._kihei
+		const skill = this._skill
 		const size = kihei.mapCell.getSize();
-		const reach = kihei.getDamageRange();
-		const type = kihei.getRangeType();
+		const reach = skill.getDamageRange();
+		const type = skill.getRangeType();
 		
 		let sp = new egret.Sprite();		
 		switch(type){
@@ -111,10 +116,5 @@ class ActionRange {
 		}
 		sp.graphics.endFill();		
 		this.damageRange = sp;
-	}
-
-	private drawKihei(){
-		let sp = new egret.Sprite();
-		
-	}
+	}	
 }

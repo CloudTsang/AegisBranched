@@ -31,6 +31,8 @@ class Main extends egret.DisplayObjectContainer {
     private mapEditor:boolean = egret.getOption('map') != ''
     private stageName:string = egret.getOption('stage')
 
+    private currentScene:any; 
+
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
@@ -40,7 +42,6 @@ class Main extends egret.DisplayObjectContainer {
 
         egret.lifecycle.addLifecycleListener((context) => {
             // custom lifecycle plugin
-
             context.onUpdate = () => {
 
             }
@@ -103,7 +104,8 @@ class Main extends egret.DisplayObjectContainer {
      * 创建游戏场景
      * Create a game scene
      */
-    private createGameScene() {         
+    private createGameScene() { 
+        LifecycleCallback.regist()      
         if(this.mapEditor){
             let me:MapEditor = new MapEditor();
             if(this.stageName != ''){
@@ -114,13 +116,29 @@ class Main extends egret.DisplayObjectContainer {
             
             this.addChild(me);       
             return;
-        }        
+        }      
+
+        this.toTitle()
+    }
+
+    private toTitle(e:any=null){        
+        let titleScene = new TitleScene()
+        this.stage.addChild(titleScene);
+        titleScene.addEventListener(PlayEvent.START, this.toStage, this)
+        this.currentScene = titleScene;
+    }
+    private toStage(e:any=null){
+        if(this.currentScene){
+              this.currentScene.dispose();
+              this.stage.removeChild(this.currentScene);
+        }
         if(this.stageName == ''){
             this.stageName = 'stage1'
         }
-        let stageScene = new StageScene();
-        this.addChild(stageScene);
-        stageScene.play(this.stageName)
+       let stageScene = new StageScene();
+       stageScene.play(this.stageName)
+       this.currentScene = stageScene
+       this.stage.addChild(stageScene);
     }
 
     /**

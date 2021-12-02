@@ -3,6 +3,14 @@ class LifecycleCallback{
     private static map:{[key:string]:LcyObj}= {};
 
     public static regist(){
+        LifecycleCallback.map['ticker'] = new LcyObj(
+            () => {
+                egret.ticker.pause();
+            },
+            () => {
+                egret.ticker.resume();
+            }
+        )
         egret.lifecycle.onPause = this.onPause;
         egret.lifecycle.onResume = this.onResume;
     } 
@@ -15,7 +23,7 @@ class LifecycleCallback{
         delete LifecycleCallback.map[key]
     }
 
-    private static onPause(){       
+    private static onPause(){     
         for(let i in LifecycleCallback.map){
             LifecycleCallback.map[i].onPause();
         }

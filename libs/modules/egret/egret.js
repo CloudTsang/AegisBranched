@@ -9160,7 +9160,7 @@ var egret;
              */
             _this.compressedTextureData = [];
             _this.debugCompressedTextureURL = '';
-            _this.$etcAlphaMask = null;
+            _this.etcAlphaMask = null;
             if (egret.nativeRender) {
                 var nativeBitmapData = new egret_native.NativeBitmapData();
                 nativeBitmapData.$init();
@@ -9349,31 +9349,12 @@ var egret;
         BitmapData.prototype.getCompressed2dTextureData = function () {
             return this._getCompressedTextureData(0, 0);
         };
-        BitmapData.prototype.$setCompressed2dTextureData = function (levelData) {
-            if (egret.nativeRender && (this.compressedTextureData.length == 0)) {
-                egret_native.NativeDisplayObject.setSourceToNativeBitmapData(this.$nativeBitmapData, levelData[0]);
-            }
-            this.compressedTextureData.push(levelData);
-        };
         BitmapData.prototype.hasCompressed2d = function () {
             return !!this.getCompressed2dTextureData();
         };
         BitmapData.prototype.clearCompressedTextureData = function () {
             this.compressedTextureData.length = 0;
         };
-        Object.defineProperty(BitmapData.prototype, "etcAlphaMask", {
-            get: function () {
-                return this.$etcAlphaMask;
-            },
-            set: function (value) {
-                if (egret.nativeRender) {
-                    egret_native.NativeDisplayObject.setSourceToNativeBitmapData(this.$nativeBitmapData, value);
-                }
-                this.$etcAlphaMask = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         BitmapData._displayList = egret.createMap();
         return BitmapData;
     }(egret.HashObject));
@@ -16321,6 +16302,7 @@ var egret;
         };
         KTXContainer.prototype._upload2DCompressedLevels = function (bitmapData, loadMipmaps) {
             bitmapData.clearCompressedTextureData();
+            var compressedTextureData = bitmapData.compressedTextureData;
             // initialize width & height for level 1
             var dataOffset = KTXContainer.HEADER_LEN + this.bytesOfKeyValueData;
             var width = this.pixelWidth;
@@ -16343,7 +16325,7 @@ var egret;
                     dataOffset += imageSize; // add size of the image for the next face/mipmap
                     dataOffset += 3 - ((imageSize + 3) % 4); // add padding for odd sized image
                 }
-                bitmapData.$setCompressed2dTextureData(levelData);
+                compressedTextureData.push(levelData);
                 width = Math.max(1.0, width * 0.5);
                 height = Math.max(1.0, height * 0.5);
             }
@@ -18519,7 +18501,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.4.1";
+        Capabilities.engineVersion = "5.4.0";
         /***
          * current render mode.
          * @type {string}
