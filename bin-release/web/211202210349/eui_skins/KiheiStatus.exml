@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="skins.KiheiStatus"
+	 width="200"
+	height="250" xmlns:e="http://ns.egret.com/eui">
+	<e:Group id="base_group" percentWidth="100" percentHeight="100" x="0" y="0">
+		<e:Rect percentWidth="100" percentHeight="100" x="0" y="0" fillAlpha="0.3" scaleX="1" scaleY="1"/>
+		<e:Group percentWidth="100" percentHeight="100" x="0" y="0" scaleX="1" scaleY="1">
+			<e:Group id="kihei_icon" percentWidth="100" percentHeight="80" top="0" y="0" x="0" scaleX="1" scaleY="1"/>
+			<e:ProgressBar id="hp_gauge" percentWidth="100" percentHeight="20" x="0" y="200" skinName="skins.ProgressBarSkin" value="100" scaleX="1" scaleY="1"/>
+			<e:layout>
+			<e:VerticalLayout gap="0" horizontalAlign="center"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="skins.EnemyProgressBarSkin"
+	 minWidth="30" minHeight="18"  xmlns:e="http://ns.egret.com/eui">
+     <e:Image id="thumb_enemy" height="100%" width="100%" source="resource/assets/ProgressBar/thumb_pb_enemy.png"/>
+</e:Skin>

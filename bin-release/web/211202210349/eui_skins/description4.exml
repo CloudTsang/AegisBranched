@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="skins.description4"
+	 width="400"
+	height="600" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect percentWidth="100" percentHeight="100" x="0" y="0" fillAlpha="0.5"/>
+	<e:Image width="68.888" height="39.078" x="87.307" y="174.057" source="resource/assets/maintain.png"/>
+	<e:Group percentWidth="100" percentHeight="100" x="0" y="0" locked="true">
+		<e:Label percentWidth="90" percentHeight="90" x="0" y="0" multiline="true" wordWrap="true" 
+        text="万物中枢的2种支援：\n每次游戏各有1次可以发动万物中枢的2种支援。\n点击          开始维修，使全部机兵回复一定耐久度。\n点击          发动电磁攻击，使场上的敌人在15秒间停止移动，并使空中敌人坠落到地面。" scaleX="1" scaleY="1" lineSpacing="20"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+	<e:Image width="68.292" height="40.271" x="88.559" y="271.249" source="resource/assets/emp.png"/>
+</e:Skin>

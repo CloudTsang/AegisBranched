@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="skins.description1"
+	 width="400"
+	height="600" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect percentWidth="100" percentHeight="100" x="0" y="0" fillAlpha="0.5"/>
+	<e:Image width="159.842" height="117" x="27.267" y="449.235" source="resource/assets/gen2.png" fillMode="scale"/>
+	<e:Group percentWidth="100" percentHeight="100" x="0" y="0" locked="true">
+		<e:Label percentWidth="90" percentHeight="90" x="0" y="0" multiline="true" wordWrap="true" 
+        text="通过点击机兵移动，拖动机兵攻击，击破不断袭来的坏兽。\n坏兽穿过地图最下方将会对万物中枢造成伤害，在限制时间内若万物中枢的耐久度降到0则Game Over。\n机兵与地面坏兽、空中大型坏兽相撞时，如果机兵处于移动中则会停止，此外耐久度将下降，如果降至0则不能再行动。" scaleX="1" scaleY="1"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+	<e:Image width="151" height="116" x="229.136" y="453.671" source="resource/assets/bull.png"/>
+</e:Skin>
