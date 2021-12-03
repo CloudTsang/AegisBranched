@@ -101,16 +101,19 @@ class ActionRange {
 				break;
 			case RangeType.FAN:
 				const r = size*reach
-				sp.graphics.beginGradientFill(egret.GradientType.RADIAL, [0xEE2C2C,0xEE2C2C], [0, 0.6], [100,255]);		
+				sp.graphics.beginGradientFill(egret.GradientType.RADIAL, [0xEE2C2C,0xEE2C2C], [0, 0.6], [1,35], new egret.Matrix());		
 				sp.graphics.moveTo(0,0);
 				sp.graphics.lineTo(r, 0);
 				sp.graphics.drawArc(0,0,r,0,120*Math.PI/180);
 				sp.graphics.lineTo(0,0)				
 				break;
-			case RangeType.LINE:				
-				sp.graphics.beginGradientFill(egret.GradientType.LINEAR, [0xEE2C2C,0xEE2C2C], [0, 0.6], [150,255]);		
+			case RangeType.LINE:	
+			
+				let mx = new egret.Matrix()			
+				// sp.graphics.beginGradientFill(egret.GradientType.LINEAR, [0xEE2C2C,0xEE2C2C], [0, 0.6], [150,255]);
+				sp.graphics.beginGradientFill(egret.GradientType.LINEAR, [0xEE2C2C,0xEE2C2C], [0, 0.6], [130,155], new egret.Matrix());		
 				sp.anchorOffsetY = reach*size/2;
-				sp.graphics.drawRect(0,0,50*size, reach*size);
+				sp.graphics.drawRect(0,0,30*size, reach*size);
 				
 				break;
 		}

@@ -69,6 +69,9 @@ class Skill {
 		}else{			
 			const ry = Math.floor(y/size)
 			const cx = Math.floor(x/size)
+			if(!cellArr[ry] || !cellArr[ry][cx]){
+				return
+			}
 			this.actionTarget = cellArr[ry][cx];
 			this.rangeSp.showDamageRange(x,y)			
 		}		
