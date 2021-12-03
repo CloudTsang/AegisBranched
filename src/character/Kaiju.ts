@@ -8,7 +8,7 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 	protected moveTween:egret.Tween;
 	protected arrived:boolean
 	protected sp:egret.DisplayObject;
-	protected aimTween:egret.Tween;
+
 	protected hpBar:eui.ProgressBar
 
 	/**测试用碰撞区域显示对象 */
@@ -24,7 +24,7 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 
 	private _blastPartical:particle.GravityParticleSystem;
 
-	protected _stun:boolean
+	protected _stun:boolean=false
 	public constructor() {
 		super()
 	}
@@ -103,34 +103,22 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 	/**进入机兵攻击范围的闪烁特效 */
 	public aimed(v:boolean){
 		if(v){
-			if(this.aimTween){
-				return;
-			}
-			let filter:egret.GlowFilter = new egret.GlowFilter(0xFFFFFF, 0.1, 20,20, 25, 1, true, false);
+			// if(this.aimTween){
+			// 	return;
+			// }
+			let filter:egret.GlowFilter = KaijuFilters.getInstance().aimFilter;//new egret.GlowFilter(0xFFFFFF, 0.1, 20,20, 25, 1, true, false);
 			if(this.air && !this.stun){
 				this.filters = [this.redFilter, this.shadowFilter, filter]
 			}else{
 				this.filters = [this.redFilter, filter]
 			}			
-			
-			this.aimTween = egret.Tween.get(filter,{loop:true})
-			.to({
-				alpha: 0.8
-			}, 500)
-			.to({
-				alpha: 0.1
-			}, 500)						
+								
 		}else{
-			if(!this.aimTween){
-				return;
-			}
-			if(this.air && !this.stun){
+			if(this.air && !this._stun){
 				this.filters = [this.redFilter, this.shadowFilter]
 			}else{
 				this.filters = [this.redFilter]
-			}
-			this.aimTween.pause();
-			this.aimTween = null			
+			}		
 		}
 	}
 
@@ -145,8 +133,6 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 		this.parent && this.parent.removeChild(this)
 		this.moveTween && this.moveTween.pause();
 		this.moveTween = null;
-		this.aimTween && this.aimTween.pause();
-		this.aimTween = null
 		this.route = null;
 		this.activate = false;
 	}
@@ -194,26 +180,26 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 		this.hpBar.value = this.getHPrate()
 
 		if(this.HP <= 0){			
-			let ptcle = new particle.GravityParticleSystem(
-				RES.getRes('kaijuslice1_png'), RES.getRes('kaijuslice1_json'));	
+			let ptcle = BlastParticles.pool.getOne()
 			ptcle.x = this.x
 			ptcle.y = this.y
 			this.parent.addChild(ptcle);
 			ptcle.start(200);
 			ptcle.addEventListener(egret.Event.COMPLETE, (e)=>{
+				ptcle.activate = false
 				ptcle.parent && ptcle.parent.removeChild(ptcle)
 				this.hpBar.parent && this.hpBar.parent.removeChild(this.hpBar)
 			}, this)
 			this.dispatchEvent(new egret.Event(PlayEvent.KAIJU_DESTROYED))
 		}else{
-			let ptcle = new particle.GravityParticleSystem(
-				RES.getRes('kaijuslice1_png'), RES.getRes('kaijuslice2_json'));	
+			let ptcle = DamageParticle.pool.getOne()
 			ptcle.x = this.x
 			ptcle.y = this.y
 			this.parent.addChild(ptcle);
 			
 			ptcle.start(5);
 			ptcle.addEventListener(egret.Event.COMPLETE, (e)=>{
+				ptcle.activate = false
 				ptcle.parent && ptcle.parent.removeChild(ptcle)
 			}, this)
 			setTimeout(()=>{
@@ -241,10 +227,10 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 
 
 	private createFilter(){
-		let filter = new egret.GlowFilter(0xDD0000, 1, 5, 5, 5);
+		let filter = KaijuFilters.getInstance().redFilter//new egret.GlowFilter(0xDD0000, 1, 5, 5, 5);
 		this.redFilter = filter
 		if(this.air){
-			let filter2 = new egret.DropShadowFilter(10,45,null,0.5)
+			let filter2 = KaijuFilters.getInstance().shadowFilter//new egret.DropShadowFilter(10,45,null,0.5)
 			this.shadowFilter = filter2
 			this.filters = [filter, filter2]			
 			return
@@ -253,13 +239,8 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 	}
 
 	public static pool:Pool<Kaiju> = new Pool<Kaiju>(()=>{
-		// return new Ant();
-		// return new Bull();
-		// return new Mosquito();
-		// return new Eagle();		
 		const air = Math.random()<=0.5
 		const ty = Math.random()<=0.15
-		// const ty = false
 		if(air && ty){
 			return new Eagle();
 		}

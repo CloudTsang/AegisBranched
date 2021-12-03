@@ -24,9 +24,6 @@ class Skill {
 
 	/**向BaseCharacter对象发动技能  */
 	public action(objs:BaseCharacter[]){
-		// for(let obj of objs){
-		// 	obj.damage(this.atk)
-		// }
 	}
 
 	/**显示攻击范围 */
@@ -109,16 +106,13 @@ class Skill {
 		const points = kaiju.getCollisionPoint();
 		const damage = this.rangeSp.damageRange;
 		const point0 = new egret.Point(damage.x, damage.y)
-		// console.log(point0, points, this.kihei.mapCell.getSize())
 		const dis = this.damageRange * this.kihei.mapCell.getSize()
 		for(let p of points){
 			const dis2 = egret.Point.distance(p, point0)
 			if(dis2<dis){
-				// console.log('distance true : ', dis, dis2)
 				return true;
 			} 
 		}
-		// console.log('distance false')
 		return false;
 	}
 
@@ -128,11 +122,9 @@ class Skill {
 		const sp = this.rangeSp.damageRange;
 		for(let p of points){
 			if(sp.hitTestPoint(p.x, p.y)){
-				// console.log('hit test true')
 				return true;
 			}
 		}
-		// console.log('hit test false')
 		return false;
 	}
 	

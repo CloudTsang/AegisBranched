@@ -521,7 +521,6 @@ class StageScene extends egret.Sprite{
 			}
 		}
 		return false
-		
 	}
 
 	private onStageClear(e:any=null){
