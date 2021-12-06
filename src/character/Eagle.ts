@@ -5,6 +5,7 @@ class Eagle extends Mosquito{
 		this.air = true;
 		this.maxHP = 100
 		this.speed = 400
+		this.weight = 5
 	}
 
 	public getCollisionPoint():egret.Point[]{

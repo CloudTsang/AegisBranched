@@ -2,6 +2,10 @@ class JumpAttack extends Skill{
 	/**对空中地块发动攻击时回到最近的地面地块 */
 	private _backCell:MapCell;
 
+	private _knockBackPower:number = 5
+
+	private _knockbackNum:number
+
 	public constructor(kihei:Kihei) {
 		super(kihei);
 		this.attackRange = 	4;
@@ -9,7 +13,7 @@ class JumpAttack extends Skill{
 		this.atk = 70
 		this.rangeType = RangeType.CIRCLE;
 		this.cd = egret.MainContext.instance.stage.frameRate * 2
-		this.type = KiheiSkill.JUMP_ATTACK;
+		this.type = KiheiSkill .JUMP_ATTACK;
 	}
 
 	public action(objs:BaseCharacter[]){
@@ -18,6 +22,7 @@ class JumpAttack extends Skill{
 		}
 		const kihei = this.kihei;
 		const actTgt = this.actionTarget;
+		this._knockbackNum = objs.length
 		let tw = egret.Tween.get(kihei)
 		.to({
 			scaleX:1.5,
@@ -35,22 +40,56 @@ class JumpAttack extends Skill{
 		.call(()=>{
 			SoundManager.instance().playBgs('bgs_impact_mp3')
 		})
-		.wait(500)
-		.to({
-			scaleX:1,
-			scaleY:1,
-			x:this._backCell.x,
-			y:this._backCell.y
-		}, 200)
 		.call(()=>{
-			kihei.mapCell = this.actionTarget
-			this.actionTarget = null;
-			this.actionTween = null;
-			kihei.startCD(this.cd);
-			kihei.dispatchEvent(new egret.Event(PlayEvent.KIHEI_ACTION_FINISH));
-			super.action(objs)
-		}, this)
+			this.knockBackKaiju(objs as Kaiju[])
+		})	
 		this.actionTween = tw
+	}
+
+	private knockBackKaiju(kaijus:Kaiju[]){
+		const actTgt = this.actionTarget;
+		const power = this._knockBackPower
+		for(let kaiju of kaijus){
+			const {sin, cos} = GlobalMethod.getSinCos(kaiju.x, kaiju.y, actTgt.x, actTgt.y)
+			//击退力度与重量差值除以2的距离
+			let knockBackDistance = (power - kaiju.getWeight())/2 * actTgt.getSize()
+			if(knockBackDistance < 0) {
+				this.onKnockBack()
+				continue
+			}
+			const newx = kaiju.x - knockBackDistance*cos
+			const newy = kaiju.y - knockBackDistance*sin 
+			egret.Tween.get(kaiju).to({
+				x:newx,y:newy
+			}, 200)
+			.call(()=>{
+				this.onKnockBack()
+			})
+		}
+	}
+
+	private onKnockBack(){
+		this._knockbackNum --;
+		if(this._knockbackNum <= 0 ){
+			//let tw = this.actionTween
+			const kihei = this.kihei
+			let tw = egret.Tween.get(kihei)
+			//.wait(300)
+			.to({
+				scaleX:1,
+				scaleY:1,
+				x:this._backCell.x,
+				y:this._backCell.y
+			}, 300)
+			.call(()=>{
+				kihei.mapCell = this.actionTarget
+				this.actionTarget = null;
+				this.actionTween = null;
+				kihei.startCD(this.cd);
+				kihei.dispatchEvent(new egret.Event(PlayEvent.KIHEI_ACTION_FINISH));
+			}, this)
+			this.actionTween = tw
+		}
 	}
 
 	public showDamageRange(x:number, y:number, cellArr:MapCell[][]){

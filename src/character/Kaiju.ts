@@ -87,6 +87,9 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 	}
 
 	protected onMoveStep(){
+		if(!this.route){
+			return
+		}
 		this.curRouteIndex ++;
 		if(this.curRouteIndex >= this.route.length){			
 			this.mapCell = this.route[this.route.length-1]
@@ -106,7 +109,7 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 			// if(this.aimTween){
 			// 	return;
 			// }
-			let filter:egret.GlowFilter = KaijuFilters.getInstance().aimFilter;//new egret.GlowFilter(0xFFFFFF, 0.1, 20,20, 25, 1, true, false);
+			let filter:egret.GlowFilter = FiltersTool.getInstance().aimFilter;//new egret.GlowFilter(0xFFFFFF, 0.1, 20,20, 25, 1, true, false);
 			if(this.air && !this.stun){
 				this.filters = [this.redFilter, this.shadowFilter, filter]
 			}else{
@@ -227,10 +230,10 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 
 
 	private createFilter(){
-		let filter = KaijuFilters.getInstance().redFilter//new egret.GlowFilter(0xDD0000, 1, 5, 5, 5);
+		let filter = FiltersTool.getInstance().redFilter//new egret.GlowFilter(0xDD0000, 1, 5, 5, 5);
 		this.redFilter = filter
 		if(this.air){
-			let filter2 = KaijuFilters.getInstance().shadowFilter//new egret.DropShadowFilter(10,45,null,0.5)
+			let filter2 = FiltersTool.getInstance().shadowFilter//new egret.DropShadowFilter(10,45,null,0.5)
 			this.shadowFilter = filter2
 			this.filters = [filter, filter2]			
 			return
@@ -239,6 +242,7 @@ class Kaiju extends BaseCharacter implements IPoolObject{
 	}
 
 	public static pool:Pool<Kaiju> = new Pool<Kaiju>(()=>{
+		return new Ant()
 		const air = Math.random()<=0.5
 		const ty = Math.random()<=0.15
 		if(air && ty){

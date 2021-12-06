@@ -1,12 +1,12 @@
 // TypeScript file
 
-class KaijuFilters{
-    public static instance:KaijuFilters;
-    public static getInstance():KaijuFilters{
-        if(!KaijuFilters.instance){
-            KaijuFilters.instance = new KaijuFilters();
+class FiltersTool{
+    public static instance:FiltersTool;
+    public static getInstance():FiltersTool{
+        if(!FiltersTool.instance){
+            FiltersTool.instance = new FiltersTool();
         }
-        return KaijuFilters.instance
+        return FiltersTool.instance
     }
     public redFilter:egret.GlowFilter = new egret.GlowFilter(0xDD0000, 1, 5, 5, 5);
     public shadowFilter:egret.DropShadowFilter = new egret.DropShadowFilter(10,45,null,0.5)

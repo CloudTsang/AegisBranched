@@ -171,6 +171,5 @@ class Kihei extends BaseCharacter{
 		}else{
 			this.sp.filters = []
 		}
-
 	}
 }

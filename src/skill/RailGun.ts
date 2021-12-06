@@ -82,7 +82,7 @@ class RailGun extends Skill{
 	private drawRailGun(){		
 		const kihei = this.kihei;
 		const cellSize = kihei.mapCell.getSize();
-		const ulength = cellSize*this.damageRange;
+		const ulength = cellSize*1.5;
 
 		let sp:egret.Sprite = new egret.Sprite();
 		sp.graphics.beginFill(0xFFFFFF);

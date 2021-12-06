@@ -11,6 +11,19 @@ class GlobalMethod{
 		return deg
 	}
 
+	public static getSinCos(x1:number,y1:number,x2:number,y2:number):{sin:number, cos:number}{
+		const dis = egret.Point.distance(new egret.Point(x1,y1), new egret.Point(x2,y2))
+		const sin = (y2 - y1 + 0.01)/dis
+		const cos = (x2 - x1 + 0.01)/dis
+		return {
+			sin,cos
+		}
+	}
+
+	public static getDistance(x1:number,y1:number,x2:number,y2:number){
+		return egret.Point.distance(new egret.Point(x1,y1), new egret.Point(x2,y2))
+	}
+
 
     public static random(min:number, max:number):number{
         return Math.random()*(max - min) + min

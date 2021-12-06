@@ -2,11 +2,13 @@ class BaseCharacter extends egret.Sprite{
 	protected HP:number;
 	protected maxHP:number;	
 	protected air:boolean;
+	protected weight:number;
 	
 	public mapCell:MapCell;
 	public constructor() {
 		super();
 		this.touchEnabled = true;
+		this.weight = 1
 	}	
 
 	/** 初始化*/
@@ -54,5 +56,9 @@ class BaseCharacter extends egret.Sprite{
 
 	public getHPrate(){
 		return Math.floor((this.HP/this.maxHP)*100)
+	}
+
+	public getWeight(){
+		return this.weight
 	}
 }

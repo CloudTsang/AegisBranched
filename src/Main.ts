@@ -119,6 +119,7 @@ class Main extends egret.DisplayObjectContainer {
         }      
 
         this.toTitle()
+        // this.toStage()
     }
 
     private toTitle(e:any=null){        

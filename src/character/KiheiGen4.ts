@@ -8,6 +8,7 @@ class KiheiGen4 extends Kihei{
 	
 	private _sin:number;
 	private _cos:number;
+	private _shadowFilter:egret.DropShadowFilter
 	
 	public constructor() {
 		super();
@@ -16,6 +17,12 @@ class KiheiGen4 extends Kihei{
 		this.skills = [
 			new MultMissile(this),
 		]
+	}
+
+	public boot(){
+		super.boot()
+		this._shadowFilter = FiltersTool.getInstance().shadowFilter
+		this.sp.filters = [this._shadowFilter]
 	}
 
 	public drawKihei():egret.DisplayObject{
@@ -31,6 +38,7 @@ class KiheiGen4 extends Kihei{
 		if(!this.sp){
 			this.addChild(bmp);				
 		}
+		
 		return bmp
 	}
 
@@ -86,4 +94,13 @@ class KiheiGen4 extends Kihei{
 		}
 		this.moveTween = null;
 	}	
+
+	public onSelect(v:boolean){
+		if(v){
+			let filter = new  egret.GlowFilter(0xFFD700, 0.8, 10,10,10,1,false)
+			this.sp.filters = [filter, this._shadowFilter]
+		}else{
+			this.sp.filters = [this._shadowFilter]
+		}
+	}
 }

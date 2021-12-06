@@ -361,8 +361,7 @@ class StageScene extends egret.Sprite{
 				}
 				const btn = this._actConfirmButton;
 				btn.x = (this._stage.stageWidth - btn.width)/2
-				btn.y = (this._stage.stageHeight - btn.height)/2	
-				console.log(this._stage.stageWidth, btn.width, btn.x)			
+				btn.y = (this._stage.stageHeight - btn.height)/2			
 				this.addChild(this._actConfirmButton);				
 			}
 		}

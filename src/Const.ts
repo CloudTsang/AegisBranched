@@ -77,4 +77,5 @@ class PlayEvent{
 	public static readonly AEGIS_DAMAGE = 'AEGIS_DAMAGE';
 
 	public static readonly STATUS_INITED = 'STATUS_INITED';
+	public static readonly MISSLE_BLAST = 'MISSLE_BLAST';
 }

@@ -17,6 +17,7 @@ class SoundManager {
 	}
 
 	public play(name:string, loops:boolean=true){
+		return
 		if(this._bgm){
 			this._bgmChannel.stop();
 			this._bgm.close();			

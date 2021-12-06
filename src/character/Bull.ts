@@ -5,6 +5,7 @@ class Bull extends Kaiju{
 		this.air = false;
 		this.maxHP = 120;
 		this.speed = 400;
+		this.weight = 3
 	}	
 
 	protected drawKaiju(){
