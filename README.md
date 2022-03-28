@@ -2,7 +2,7 @@
  Egret引擎做的模仿简化十三机兵战斗系统的小游戏，使用一二三四代机兵各一机抵抗坏兽入侵。
 
 
-![pic](https://gitee.com/cloudtsang/AegisBranched/raw/main/pic2.png)
+![pic](https://gitee.com/cloudtsang/egret-aegis-branched/raw/main/pic2.png)
 
 
 操作也简化了，点击移动，拖动攻击，每体机兵简化到只有一种攻击：
