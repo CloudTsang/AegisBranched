@@ -35,8 +35,12 @@ class TitleScene extends egret.Sprite{
 		btn.addEventListener('touchTap', this.onStart, this)
 		this.addChild(btn)
 		this._startBtn = btn
-
-		SoundManager.instance().play('tofinalbattle_mp3')
+		
+		// SoundManager.instance().play('tofinalbattle_mp3')
+		this.once("touchTap", (e)=>{
+			SoundManager.instance().play('tofinalbattle_mp3')
+		}, this)
+		
 	}
 
 	private onNextPage(e){

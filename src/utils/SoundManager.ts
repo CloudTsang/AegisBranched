@@ -5,12 +5,16 @@ class SoundManager {
 	private _bgs:{[key:string]:egret.Sound}
 	private _curBgmName:string
 	private _curLoop:boolean
+	private _isPausing:boolean
+	private _defaultVolume:number
 	private static _ins:SoundManager;
 
 	public constructor() {
 		LifecycleCallback.addFunc('bgm', ()=>{this.pause()}, ()=>{this.resume()})
 		this._bgs = {}
-
+		this._defaultVolume = 0.5
+		//test
+		// this._defaultVolume = 0
 		// const bgm:egret.Sound = new egret.Sound();
 		// bgm.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this)
 		// bgm.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFailed, this)
@@ -46,9 +50,11 @@ class SoundManager {
 		this._bgm = RES.getRes(name)
 		this._bgm.type = egret.Sound.MUSIC;
 		try{
+			if(this._isPausing)return
 			this._bgmChannel = this._bgm.play(0, loops?0:1);
+			this._bgmChannel.volume = this._defaultVolume
 		}catch(err){
-			console.error(err)
+			console.log(err)
 		}	
 	}
 
@@ -61,16 +67,17 @@ class SoundManager {
 			s = this._bgs[name]
 		}
 		if(!s)return
+		// if(this._isPausing)return
 		s.play(0,1)
 	}
 
 	public resume(){
+		this._isPausing = false
 		if(!this._bgm || !this._bgmChannel){
 			return;	
 		}
-
 		this._bgmChannel = this._bgm.play(this._bgmPosition, 1);
-
+		this._bgmChannel.volume = this._defaultVolume
 		this._bgmChannel.addEventListener(egret.Event.SOUND_COMPLETE, this.onResumeOver, this)
 
 	}
@@ -80,17 +87,28 @@ class SoundManager {
 			return;	
 		}
 		this._bgmChannel = this._bgm.play(0, 0);
+		this._bgmChannel.volume = this._defaultVolume
 	
 	}
 
 	public pause(){
+		this._isPausing = true
 		if(this._bgm && this._bgmChannel){	
 			this._bgmPosition = this._bgmChannel.position
 			this._bgmChannel.stop();	
 		}
 	}
 
-	public static get instance():SoundManager{
+	public stop(){
+		if(this._bgm && this._bgmChannel){	
+			this._bgmChannel.stop();	
+			// this._bgm.close()
+			this._bgmChannel = null
+			this._bgm = null
+		}
+	}
+
+	public static instance():SoundManager{
 		if(!SoundManager._ins){
 			SoundManager._ins = new SoundManager();
 		}

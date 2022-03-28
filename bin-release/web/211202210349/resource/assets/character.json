@@ -1,9 +1,0 @@
-{"file":"character.png","frames":{
-"mosqito":{"x":0,"y":275,"w":300,"h":180,"offX":15,"offY":15,"sourceW":330,"sourceH":210},
-"bull":{"x":302,"y":364,"w":285,"h":180,"offX":0,"offY":0,"sourceW":285,"sourceH":190},
-"ant":{"x":741,"y":394,"w":190,"h":120,"offX":10,"offY":10,"sourceW":210,"sourceH":140},
-"eagle":{"x":589,"y":394,"w":150,"h":310,"offX":20,"offY":10,"sourceW":190,"sourceH":330},
-"gen1":{"x":0,"y":0,"w":390,"h":273,"offX":15,"offY":12,"sourceW":420,"sourceH":315},
-"gen2":{"x":392,"y":172,"w":330,"h":190,"offX":15,"offY":20,"sourceW":360,"sourceH":220},
-"gen3":{"x":724,"y":172,"w":250,"h":220,"offX":5,"offY":5,"sourceW":265,"sourceH":235},
-"gen4":{"x":392,"y":0,"w":440,"h":170,"offX":10,"offY":20,"sourceW":460,"sourceH":200}}}

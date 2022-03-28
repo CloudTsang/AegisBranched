@@ -82,7 +82,7 @@ class StageScene extends egret.Sprite{
 	}
 
 	private initMap(mapData:number[][], mapSize:number[], nodeData:any, kaiju:number[][]){	
-		let cellSize = this._stage.stageWidth / mapSize[1]	
+		let cellSize = this._stage.stageWidth *0.8 / mapSize[1]	
 		World.getIns().initMap(mapData, mapSize, nodeData, cellSize, kaiju);
 		let cellArr = World.getIns().cellArr;
 		for(let r=0; r<mapSize[0]; r++){			

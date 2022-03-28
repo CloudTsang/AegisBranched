@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="confirmbtn" width="300" height="100" xmlns:e="http://ns.egret.com/eui" states="up,down">
-	<e:Image width="300" height="100" includeIn="down" x="0" y="0" source="resource/assets/confirmbtn_down.png" anchorOffsetX="0" anchorOffsetY="0"/>
-	<e:Image width="300" height="100" includeIn="up" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" source="resource/assets/confirmbtn.png"/>
-</e:Skin>
